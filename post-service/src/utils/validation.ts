@@ -7,3 +7,9 @@ export const postSchema = z.object({
 
 export type IPost = z.infer<typeof postSchema>;
 
+export const paginationSchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().default(10),
+});
+
+
