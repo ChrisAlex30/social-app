@@ -6,7 +6,9 @@ import {logger} from "./utils/logger.js";
 import { Request, Response, NextFunction } from "express";
 import { globalLimiter } from "./middlewares/rate-limiter.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
-import { authProxy } from "./middlewares/auth-proxy.js";
+import { createProxy } from "./middlewares/auth-proxy.js";
+import { validateToken } from "./middlewares/auth.js";
+import proxy from "express-http-proxy";
 
 
 const app=express();
@@ -27,8 +29,23 @@ app.use((req: Request,res: Response,next: NextFunction) => {
 app.set("trust proxy", 1);
 
 app.use(globalLimiter);
+app.use(
+  "/v1/auth",
+  createProxy(
+    process.env.IDENTITY_SERVICE_URL!,
+    "Identity Service"
+  )
+);
 
-app.use( "/v1/auth",authProxy);
+app.use(
+  "/v1/posts",
+  validateToken,
+  createProxy(
+    process.env.POST_SERVICE_URL!,
+    "Post Service",
+    true
+  )
+);
 
 app.use(errorHandler);
 
@@ -51,6 +68,7 @@ process.on("unhandledRejection", (reason, promise) => {
 app.listen(PORT,()=>{
     logger.info(`API GATEWAY SERVICE started on port ${PORT}`)
     logger.info(`Identity SERVICE started on url ${process.env.IDENTITY_SERVICE_URL}`)
+    logger.info(`Post SERVICE started on url ${process.env.POST_SERVICE_URL}`)
     logger.info(`REDIS SERVICE started on url ${process.env.REDIS_URL}`)
 });
 

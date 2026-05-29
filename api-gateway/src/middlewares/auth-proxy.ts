@@ -2,32 +2,42 @@ import proxy from "express-http-proxy";
 import { Request } from "express";
 import { logger } from "../utils/logger.js";
 
-export const authProxy = proxy(process.env.IDENTITY_SERVICE_URL!, {
+export const createProxy = (
+  target: string,
+  serviceName: string,
+  addUserHeaders = false
+) => {
+  return proxy(target, {
+    proxyReqPathResolver: (req: Request) => {
+      return req.originalUrl.replace("/v1", "/api");
+    },
 
-  proxyReqPathResolver: (req: Request) => {
-    return req.originalUrl.replace("/v1", "/api");
-  },
+    proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
 
-  proxyReqOptDecorator: (proxyReqOpts) => {
-    proxyReqOpts.headers["content-type"] = "application/json";
+      if (addUserHeaders && srcReq.user) {
+        proxyReqOpts.headers["x-user-id"] =
+          srcReq.user.userId;
+      }
 
-    return proxyReqOpts;
-  },
+      return proxyReqOpts;
+    },
 
-  userResDecorator: (proxyRes, proxyResData) => {
-    logger.info(
-      `Response received for Identity Service ${proxyRes.statusCode}`
-    );
+    userResDecorator: (proxyRes, proxyResData) => {
+      logger.info(
+        `Response received from ${serviceName}: ${proxyRes.statusCode}`
+      );
 
-    return proxyResData;
-  },
+      return proxyResData;
+    },
 
-  proxyErrorHandler: (err, res) => {
-    logger.error(`Proxy error : ${err.message}`);
+    proxyErrorHandler: (err, res) => {
+      logger.error(
+        `${serviceName} proxy error: ${err.message}`
+      );
 
-    res.status(500).json({
-      message: "Internal Server Error",
-      error: err.message,
-    });
-  },
-});
+      res.status(500).json({
+        message: "Internal Server Error",
+      });
+    },
+  });
+};
