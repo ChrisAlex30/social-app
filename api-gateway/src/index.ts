@@ -8,7 +8,6 @@ import { globalLimiter } from "./middlewares/rate-limiter.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { createProxy } from "./middlewares/auth-proxy.js";
 import { validateToken } from "./middlewares/auth.js";
-import proxy from "express-http-proxy";
 
 
 const app=express();
@@ -47,6 +46,17 @@ app.use(
   )
 );
 
+app.use(
+  "/v1/media",
+  validateToken,
+  createProxy(
+    process.env.MEDIA_SERVICE_URL!,
+    "Media Service",
+    true,
+    false
+  )
+);
+
 app.use(errorHandler);
 
 const PORT=process.env.PORT || 3000
@@ -69,6 +79,7 @@ app.listen(PORT,()=>{
     logger.info(`API GATEWAY SERVICE started on port ${PORT}`)
     logger.info(`Identity SERVICE started on url ${process.env.IDENTITY_SERVICE_URL}`)
     logger.info(`Post SERVICE started on url ${process.env.POST_SERVICE_URL}`)
+    logger.info(`Media SERVICE started on url ${process.env.MEDIA_SERVICE_URL}`)
     logger.info(`REDIS SERVICE started on url ${process.env.REDIS_URL}`)
 });
 

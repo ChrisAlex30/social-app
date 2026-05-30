@@ -5,9 +5,11 @@ import { logger } from "../utils/logger.js";
 export const createProxy = (
   target: string,
   serviceName: string,
-  addUserHeaders = false
+  addUserHeaders = false,
+  parseBody = true
 ) => {
   return proxy(target, {
+    parseReqBody: parseBody,
     proxyReqPathResolver: (req: Request) => {
       return req.originalUrl.replace("/v1", "/api");
     },
