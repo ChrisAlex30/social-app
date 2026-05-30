@@ -9,11 +9,10 @@ import { globalLimiter } from "./middlewares/rate-limiter.js";
 import { postRouter } from "./routes/post-service.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { redisClient } from "./utils/redis-client.js";
+import { connectRabbitMQ } from "./utils/rabbitmq.js";
 
 
 const app=express();
-
-await connectDB() ;
 
 app.use(helmet())
 app.use(cors())
@@ -55,7 +54,22 @@ process.on("unhandledRejection", (reason, promise) => {
   process.exit(1);
 });
 
-app.listen(PORT,()=>{
-    logger.info(`Post App started on port ${PORT}`);
-})
+const start = async () => {
+  try {
+    await connectDB();
+    await connectRabbitMQ();
+
+    app.listen(PORT, () => {
+      logger.info(`Post App started on port ${PORT}`);
+    });
+  } catch (error) {
+    logger.error(error);
+    logger.info("Startup failed. Retrying in 5 seconds...");
+    setTimeout(start, 5000);
+  }
+};
+
+start();
+
+
 
