@@ -1,4 +1,4 @@
-import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
+import { v2 as cloudinary, UploadApiResponse, } from "cloudinary";
 import { logger } from "./logger.js";
 
 cloudinary.config({
@@ -29,3 +29,14 @@ export const uploadMediaToCloudinary = (
         uploadStream.end(file.buffer);
     });
 };
+
+export interface DeleteApiResponse {
+  result: "ok" | "not found";
+}
+
+export const deleteMediaFromCloudinary = async (
+  publicId: string
+): Promise<DeleteApiResponse> => {
+  return cloudinary.uploader.destroy(publicId);
+};
+

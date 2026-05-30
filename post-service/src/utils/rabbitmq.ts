@@ -15,3 +15,15 @@ export async function connectRabbitMQ() {
     );
     logger.info("RabbitMQ connected");
 }
+interface PostDeletionMessage {
+    postId: string;
+    userId: string;
+    mediaIds: string[];
+}
+export async function publishEvent(routingKey:string,message:PostDeletionMessage){
+    if(!channel){
+        await connectRabbitMQ();
+    }
+    channel.publish(EXCHANGE_NAME,routingKey,Buffer.from(JSON.stringify(message)))
+    logger.info(`Event Published ${routingKey}`);
+}

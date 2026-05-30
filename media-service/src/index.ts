@@ -8,11 +8,12 @@ import { Request, Response, NextFunction } from "express";
 import { globalLimiter } from "./middlewares/rate-limiter.js";
 import { mediaRouter } from "./routes/media-service.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { connectRabbitMQ, consumeEvent } from "./utils/rabbitmq.js";
+import { handlePostDeleted } from "./eventHandlers/media-event-handler.js";
 
 
 const app=express();
 
-await connectDB() ;
 
 app.use(helmet())
 app.use(cors())
@@ -51,7 +52,20 @@ process.on("unhandledRejection", (reason, promise) => {
   process.exit(1);
 });
 
-app.listen(PORT,()=>{
-    logger.info(`Media App started on port ${PORT}`);
-})
+const start = async () => {
+  try {
+    await connectDB();
+    await connectRabbitMQ();
+    await consumeEvent("post.delete",handlePostDeleted);
 
+    app.listen(PORT, () => {
+      logger.info(`Media App started on port ${PORT}`);
+    });
+  } catch (error) {
+    logger.error(error);
+    logger.info("Startup failed. Retrying in 5 seconds...");
+    setTimeout(start, 5000);
+  }
+};
+
+start();

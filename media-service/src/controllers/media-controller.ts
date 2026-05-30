@@ -33,3 +33,8 @@ export const uploadMedia=async(req:Request,res:Response,next:NextFunction)=>{
         message:"File Successfully Uploaded"
     })
 }
+
+export const getAllMedia=async(req:Request,res:Response,next:NextFunction)=>{
+    const result= await Media.find({userId:req.user.userId});
+    res.json(result);
+}

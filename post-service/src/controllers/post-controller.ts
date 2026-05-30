@@ -3,6 +3,7 @@ import { logger } from "../utils/logger.js";
 import { paginationSchema, postSchema } from "../utils/validation.js";
 import { AppError } from "../utils/AppError.js";
 import { Post } from "../models/Post.js";
+import { publishEvent } from "../utils/rabbitmq.js";
 
 async function invalidatePostCache(req: Request,postId: string) {
     const userId = req.user.userId;
@@ -93,6 +94,11 @@ export const delPost=async(req:Request,res:Response,next:NextFunction)=>{
                 404
             );
     }
+    await publishEvent("post.delete",{
+        postId:post._id.toString(),
+        userId:req.user.userId,
+        mediaIds:post.mediaIds
+    })
     await invalidatePostCache(req,req.params.id.toString());
     res.json({
         success:true,
