@@ -26,6 +26,12 @@ export const createPost=async(req:Request,res:Response,next:NextFunction)=>{
       content,
       mediaIds:mediaIds || []
     });
+    await publishEvent("post.created",{
+        postId:newPost._id.toString(),
+        userId:req.user.userId,
+        content:newPost.content,
+        createdAt:newPost.createdAt
+    })
     await invalidatePostCache(req,newPost._id.toString());
     logger.info("Post Created Successfully..");
     res.status(201).json({

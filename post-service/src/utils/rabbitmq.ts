@@ -20,10 +20,18 @@ interface PostDeletionMessage {
     userId: string;
     mediaIds: string[];
 }
-export async function publishEvent(routingKey:string,message:PostDeletionMessage){
-    if(!channel){
+// export async function publishEvent(routingKey:string,message:PostDeletionMessage){
+//     if(!channel){
+//         await connectRabbitMQ();
+//     }
+//     channel.publish(EXCHANGE_NAME,routingKey,Buffer.from(JSON.stringify(message)))
+//     logger.info(`Event Published ${routingKey}`);
+// }
+
+export async function publishEvent<T>(routingKey: string,message: T) {
+    if (!channel) {
         await connectRabbitMQ();
     }
-    channel.publish(EXCHANGE_NAME,routingKey,Buffer.from(JSON.stringify(message)))
+    channel.publish(EXCHANGE_NAME,routingKey,Buffer.from(JSON.stringify(message)));
     logger.info(`Event Published ${routingKey}`);
 }
