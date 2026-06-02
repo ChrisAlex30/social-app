@@ -13,7 +13,7 @@ export const handlePostCreated = async (event: PostCreatedEvent) => {
         const newSearchPost=await Search.create({
             postId,userId,content,createdAt
         })
-        logger.info(`Serach post created for post id : ${postId}`)
+        logger.info(`Search post created for post id : ${postId}`)
 }
 
 interface PostDeletedEvent {
@@ -25,5 +25,5 @@ interface PostDeletedEvent {
 export const handlePostDeleted = async (event: PostDeletedEvent) => {
     const {postId}=event;
     await Search.findOneAndDelete({postId})
-    logger.info(`Serach post deleted for post id : ${postId}`)
+    logger.info(`Search post deleted for post id : ${postId}`)
 };

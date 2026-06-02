@@ -57,6 +57,16 @@ app.use(
   )
 );
 
+app.use(
+  "/v1/search",
+  validateToken,
+  createProxy(
+    process.env.SEARCH_SERVICE_URL!,
+    "Search Service",
+    true
+  )
+);
+
 app.use(errorHandler);
 
 const PORT=process.env.PORT || 3000
@@ -80,6 +90,7 @@ app.listen(PORT,()=>{
     logger.info(`Identity SERVICE started on url ${process.env.IDENTITY_SERVICE_URL}`)
     logger.info(`Post SERVICE started on url ${process.env.POST_SERVICE_URL}`)
     logger.info(`Media SERVICE started on url ${process.env.MEDIA_SERVICE_URL}`)
+    logger.info(`Search SERVICE started on url ${process.env.SEARCH_SERVICE_URL}`)
     logger.info(`REDIS SERVICE started on url ${process.env.REDIS_URL}`)
 });
 

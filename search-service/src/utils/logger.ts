@@ -4,7 +4,7 @@ export const logger = winston.createLogger({
     level: process.env.NODE_ENV === "production" ? "info" : "debug",
 
     defaultMeta: {
-        service: "media-service",
+        service: "search-service",
     },
 
     format: winston.format.combine(

@@ -5,4 +5,4 @@ import { authRequest } from "../middlewares/auth.js";
 export const searchRouter=express.Router();
 searchRouter.use(authRequest);
 
-searchRouter.post("/search",searchPost);
+searchRouter.get("/search-post",searchPost);
