@@ -1,27 +1,61 @@
-# Social Media Microservices
+# 🌐 Social App
 
-## Services
+A production-inspired event-driven microservices application built with Node.js, Express, RabbitMQ, Redis, MongoDB and Docker.
 
-- API Gateway
-- Identity Service
-- Post Service
-- Media Service
-- Search Service
+The application demonstrates a distributed backend architecture where independent services communicate asynchronously through RabbitMQ. It includes centralized request routing with an API Gateway, JWT authentication, media management, search capabilities, and Redis-based rate limiting.
 
-## Infrastructure
+🔗 Live Demo: (later)
 
-- MongoDB
-- Redis Stack
-- RabbitMQ
+🏗️ Architecture
+
+![Social App Architecture](docs/social-architecture.png)
+
+## ✨ Features
+
+- JWT authentication
+- API Gateway for centralized routing
+- Independent microservices
+- RabbitMQ event-driven communication
+- Redis-based rate limiting
+- Media uploads with Cloudinary
+- Search service
+- Dockerized development environment
+- RESTful APIs
+
+## 🛠 Tech Stack
+
+- Node.js
+- Express
+- TypeScript
+
+## 📦 Infrastructure
+
+- Docker
 - Docker Compose
+- RabbitMQ
+- Redis
+- MongoDB
+- Cloudinary
 
-## Run
+## 🚀 Highlights
 
-docker compose up --build
+This project focuses on distributed backend architecture and asynchronous communication.
 
-## URLs
+Key implementation highlights include:
 
-API Gateway: http://localhost:3000
-RabbitMQ UI: http://localhost:15672
-Redis Insight: http://localhost:8001
-MongoDB: mongodb://localhost:27018
+- Event-driven communication using RabbitMQ
+- API Gateway for centralized routing and authentication
+- Independent microservices with clear service boundaries
+- Redis-powered request rate limiting
+- Docker Compose orchestration for local development
+- Cloudinary integration for media storage
+
+## 📦 Services
+
+| Service | Responsibility |
+|----------|----------------|
+| API Gateway | Request routing, JWT validation and rate limiting |
+| Identity Service | User authentication and authorization |
+| Post Service | Post management and publishing events |
+| Media Service | Image uploads and media management |
+| Search Service | Search indexing and querying |
