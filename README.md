@@ -8,7 +8,7 @@ The application demonstrates a distributed backend architecture where independen
 
 🏗️ Architecture
 
-![Social App Architecture](docs/social-architecture.png)
+![Social App Architecture](docs/socialapp-architecture.png)
 
 ## ✨ Features
 
