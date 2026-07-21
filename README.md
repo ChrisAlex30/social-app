@@ -5,7 +5,7 @@ A production-inspired event-driven microservices application built with Node.js,
 The application demonstrates a distributed backend architecture where independent services communicate asynchronously through RabbitMQ. It includes centralized request routing with an API Gateway, JWT authentication, media management, search capabilities, and Redis-based rate limiting.
 
 ![Node.js](https://img.shields.io/badge/Node.js-22-green)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-blue)
 ![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED)
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Event--Driven-orange)
 
